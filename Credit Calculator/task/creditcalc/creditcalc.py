@@ -1,6 +1,15 @@
+'''
+Jetbrains project to calculate loan amount, interest and number of payments
+created by Saranya Sasidharan
+'''
+
 import math
 import sys
 
+# calculate principal amount using formula P = A / (i*(1+i)^n/((1+i)^n-1))
+# where A is annuity payment
+# i is nominal interest
+# n is number of payments
 def calculate_principal(A,i,n):
     den = (i * pow(1 + i, n)) / (pow(1 + i, n) - 1)
     P = A / den
@@ -8,6 +17,11 @@ def calculate_principal(A,i,n):
     print(f"Your credit principal = {math.ceil(P)}!")
     print(f"Overpayment = {math.ceil(overpayment)}")
 
+
+# calculate annuity payment using formula A = p*(i*(1+i)^n/((1+i)^n - 1)))
+# where P is loan principal
+# i is nominal interest
+# n is number of payments
 def calculate_annuity(n,i,P):
     A = P * ((i * pow(1 + i, n)) / (pow(1 + i, n) - 1))
     A = math.ceil(A)
@@ -15,6 +29,11 @@ def calculate_annuity(n,i,P):
     print(f"Your annuity payment = {A}!")
     print(f"Overpayment = {math.ceil(overpayment)}")
 
+
+# calculate no of payments using formula n = log1+i(A/(A-(i*p)))
+# where A is annuity payment
+# i is nominal interest
+# p is loan principal
 def calculate_months(P,A,i):
     n = math.log(A / (A - i * P), 1 + i)
     n = math.ceil(n)
@@ -37,6 +56,12 @@ def calculate_months(P,A,i):
     overpayment = (A * n) - P
     print(f"Overpayment = {math.ceil(overpayment)}")
 
+
+# calculate differential payment using formula Dm = P/n + i*(P-(p*(m-1)/n))
+# where P is loan principal
+# n is number of payments
+# i is nominal interest rate
+# m is current repayment month
 def calculate_diff(P,n,i):
     sum = 0
     for j in range(1, n + 1):
@@ -49,14 +74,17 @@ def calculate_diff(P,n,i):
     overpayment = sum - P
     print(f"Overpayment = {overpayment}")
 
+
 args = sys.argv
-#args = ["","--type=diff", "--principal=1000000", "--periods=10", "--interest=10"]
+# args = ["","--type=diff", "--principal=1000000", "--periods=10", "--interest=10"]
 key = []
 value = []
 for i in args[1:]:
     key1,value1 = i.replace("--","").split("=")
     key.append(key1)
     value.append(value1)
+
+    # check for loan type and required parameters
 if "annuity" not in value and "diff" not in value:
     print("Incorrect parameters")
 elif "interest" not in key:
